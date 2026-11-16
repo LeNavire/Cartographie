@@ -1,0 +1,593 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>Cartographie-me — Dessin technique & visionneuse de désordres</title>
+    <style>
+      :root {
+        --bg: #f6f4ef;
+        --surf: #fff;
+        --tx: #1b2430;
+        --mut: #5b6674;
+        --ac: #0e6b5c;
+        --ac2: #c2410c;
+        --bd: #dcd8cd;
+        --hero: #10302b;
+        --herotx: #f4f1ea;
+        box-sizing: border-box;
+        padding-top: env(safe-area-inset-top, 0px);
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+      }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) {
+          --bg: #11161b;
+          --surf: #1a2128;
+          --tx: #e8e6df;
+          --mut: #9aa5b1;
+          --ac: #3cc4a8;
+          --ac2: #fb923c;
+          --bd: #2c3640;
+          --hero: #0b1f1c;
+          --herotx: #f4f1ea;
+        }
+      }
+      :root[data-theme="dark"] {
+        --bg: #11161b;
+        --surf: #1a2128;
+        --tx: #e8e6df;
+        --mut: #9aa5b1;
+        --ac: #3cc4a8;
+        --ac2: #fb923c;
+        --bd: #2c3640;
+        --hero: #0b1f1c;
+        --herotx: #f4f1ea;
+      }
+      html {
+        scroll-behavior: smooth;
+        scroll-padding-top: env(safe-area-inset-top, 0px);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--tx);
+        font:
+          17px/1.65 Georgia,
+          "Times New Roman",
+          serif;
+      }
+      h1,
+      h2,
+      h3,
+      nav,
+      .tag,
+      .btn,
+      .ph {
+        font-family: "Segoe UI", system-ui, Arial, sans-serif;
+      }
+      .wrap {
+        max-width: 1040px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+      nav {
+        position: sticky;
+        top: env(safe-area-inset-top, 0px);
+        z-index: 5;
+        background: var(--surf);
+        border-bottom: 1px solid var(--bd);
+        font-size: 14px;
+      }
+      nav .wrap {
+        display: flex;
+        gap: 18px;
+        align-items: center;
+        overflow-x: auto;
+        padding-top: 12px;
+        padding-bottom: 12px;
+      }
+      nav b {
+        color: var(--ac);
+        white-space: nowrap;
+      }
+      nav a {
+        color: var(--mut);
+        text-decoration: none;
+        white-space: nowrap;
+      }
+      nav a:hover {
+        color: var(--ac);
+      }
+      .hero {
+        background: var(--hero);
+        color: var(--herotx);
+        padding: 72px 0 64px;
+      }
+      .tag {
+        display: inline-block;
+        font-size: 12px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: #7fe0c9;
+        border: 1px solid #2f6b5f;
+        padding: 4px 10px;
+        border-radius: 99px;
+      }
+      .hero h1 {
+        font-size: clamp(32px, 6vw, 56px);
+        line-height: 1.1;
+        margin: 18px 0 16px;
+      }
+      .hero p {
+        max-width: 680px;
+        color: #cfd8d4;
+        font-size: 19px;
+      }
+      .btn {
+        display: inline-block;
+        margin: 10px 10px 0 0;
+        padding: 11px 20px;
+        border-radius: 8px;
+        background: #3cc4a8;
+        color: #06231e;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 15px;
+      }
+      .btn.o {
+        background: transparent;
+        color: var(--herotx);
+        border: 1px solid #4d7a71;
+      }
+      section {
+        padding: 60px 0;
+        border-bottom: 1px solid var(--bd);
+      }
+      h2 {
+        font-size: clamp(26px, 4vw, 36px);
+        margin: 0 0 8px;
+      }
+      .lead {
+        color: var(--mut);
+        max-width: 720px;
+        margin: 0 0 30px;
+      }
+      .grid {
+        display: grid;
+        gap: 18px;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      }
+      .card {
+        background: var(--surf);
+        border: 1px solid var(--bd);
+        border-radius: 12px;
+        padding: 22px;
+      }
+      .card h3 {
+        margin: 0 0 6px;
+        font-size: 18px;
+        color: var(--ac);
+      }
+      .card p {
+        margin: 0;
+        font-size: 15.5px;
+        color: var(--mut);
+      }
+      .ph {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        min-height: 240px;
+        border: 2px dashed var(--bd);
+        border-radius: 12px;
+        background: var(--surf);
+        color: var(--mut);
+        font-size: 14px;
+        padding: 16px;
+      }
+      .ph.w {
+        min-height: 320px;
+      }
+      .ph.img {
+        border: none;
+        padding: 0;
+        background: none;
+        min-height: 0;
+      }
+      .ph.img img {
+        display: block;
+        width: 100%;
+        height: auto;
+        border-radius: 12px;
+        border: 1px solid var(--bd);
+      }
+      .ph.img0 img {
+        display: block;
+        width: 50%;
+        height: auto;
+        border-radius: 12px;
+        border: 1px solid var(--bd);
+      }
+      .two {
+        display: grid;
+        gap: 28px;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        align-items: center;
+      }
+      .app {
+        background: var(--surf);
+        border: 1px solid var(--bd);
+        border-radius: 14px;
+        padding: 26px;
+        margin-bottom: 26px;
+      }
+      .app h3 {
+        font-size: 24px;
+        margin: 6px 0 10px;
+      }
+      .app .n {
+        color: var(--ac2);
+        font-family: "Segoe UI", Arial, sans-serif;
+        font-weight: 700;
+        font-size: 13px;
+        letter-spacing: 0.1em;
+      }
+      ul {
+        padding-left: 20px;
+        margin: 10px 0;
+      }
+      li {
+        margin: 5px 0;
+      }
+      .quote {
+        border-left: 4px solid var(--ac2);
+        padding: 6px 0 6px 20px;
+        font-size: 21px;
+        font-style: italic;
+        margin: 26px 0;
+      }
+      .flow {
+        display: grid;
+        gap: 14px;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        counter-reset: s;
+      }
+      .flow .card {
+        position: relative;
+        padding-top: 42px;
+      }
+      .flow .card:before {
+        counter-increment: s;
+        content: counter(s);
+        position: absolute;
+        top: -14px;
+        left: 18px;
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: var(--ac);
+        color: #fff;
+        display: grid;
+        place-items: center;
+        font:
+          700 16px "Segoe UI",
+          Arial,
+          sans-serif;
+      }
+      footer {
+        padding: 44px 0;
+        text-align: center;
+        color: var(--mut);
+        font-size: 15px;
+      }
+      footer b {
+        color: var(--tx);
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <div class="wrap">
+        <b>Cartographie-me</b><a href="#vision">Vision</a
+        ><a href="#editeur">Application 1 · Éditeur</a
+        ><a href="#visionneuse">Application 2 · Visionneuse</a
+        ><a href="#parcours">Parcours</a><a href="#galerie">Galerie</a
+        ><a href="#auteur">Auteur</a>
+      </div>
+    </nav>
+
+    <header class="hero">
+      <div class="wrap">
+        <span class="tag">Diagnostic · Expertise · Génie civil</span>
+        <h1>Dessiner le désordre.<br />Le rendre lisible à tous.</h1>
+        <p>
+          Deux applications complémentaires : un éditeur pour produire des plans
+          et des cartographies de désordres de qualité professionnelle, et une
+          visionneuse qui permet au maître d’ouvrage de lire le travail de
+          l’expert, désordre par désordre.
+        </p>
+        <a class="btn" href="#editeur">Découvrir les applications</a
+        ><a class="btn o" href="#vision">Notre vision</a>
+      </div>
+    </header>
+
+    <section id="vision">
+      <div class="wrap">
+        <h2>Changer le paradigme</h2>
+        <p class="lead">
+          Aujourd’hui, un rapport d’expertise reste souvent opaque pour celui
+          qui le commande. Cartographie-me part d’un constat simple : ce qui est
+          bien dessiné se comprend.
+        </p>
+        <div class="quote">
+          Supprimer la notion de « non-sachant » collée à certains maîtres
+          d’ouvrage.
+        </div>
+        <div class="grid">
+          <div class="card">
+            <h3>La fracture technique</h3>
+            <p>
+              La maîtrise des logiciels de DAO/CAO varie fortement d’un
+              ingénieur à l’autre, et la qualité des plans en pâtit.
+            </p>
+          </div>
+          <div class="card">
+            <h3>La crédibilité du rapport</h3>
+            <p>
+              Un contenu irréprochable perd de sa force face à des croquis
+              approximatifs. La forme sert le fond.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Le temps perdu</h3>
+            <p>
+              Produire une vue en plan ou un plan de coffrage mobilise trop
+              d’énergie pour qui n’est pas dessinateur.
+            </p>
+          </div>
+          <div class="card">
+            <h3>L’opacité côté client</h3>
+            <p>
+              Sans support clair, le maître d’ouvrage ne mesure ni l’ampleur ni
+              la gravité des désordres.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="editeur">
+      <div class="wrap">
+        <h2>Deux applications, un seul flux</h2>
+        <p class="lead">
+          Elles fonctionnent dans le navigateur, sans installation lourde, et
+          échangent leurs données par un fichier JSON.
+        </p>
+        <div class="app">
+          <div class="two">
+            <div>
+              <span class="n">APPLICATION 1</span>
+              <h3>Cartographie-me Pro — l’éditeur</h3>
+              <p>
+                Le moyen le plus simple de réaliser des dessins de qualité et
+                une cartographie de désordres professionnelle, quel que soit le
+                niveau en CAO.
+              </p>
+              <ul>
+                <li>
+                  <b>Dessin 2D intuitif</b> : vues en plan architecturales et
+                  plans de coffrage.
+                </li>
+                <li>
+                  <b>Éléments de construction</b> : murs, voiles BA, poteaux,
+                  poutres, planchers, escaliers, fondations, longrines,
+                  semelles, profilés acier.
+                </li>
+                <li>
+                  <b>Ouvertures et repères</b> : portes, fenêtres, garage,
+                  niveaux Z, boussole / Nord, cotation en cm.
+                </li>
+                <li>
+                  <b>Désordres</b> : fissures, épaufrures, humidité,
+                  déformations, avec symbologie normalisée.
+                </li>
+                <li>
+                  <b>Organisation</b> : calques, historique, annuler / rétablir,
+                  annotations, textes libres.
+                </li>
+                <li>
+                  <b>Export haute résolution</b> prêt pour le rapport
+                  d’expertise.
+                </li>
+              </ul>
+            </div>
+            <div class="ph w img">
+              <img src="CP.jpg" alt="Éditeur Cartographie-me Pro" />
+            </div>
+          </div>
+        </div>
+
+        <div class="app" id="visionneuse">
+          <div class="two">
+            <div class="ph w img">
+              <img src="VS.jpg" alt="Visionneuse Cartographie-me" />
+            </div>
+            <div>
+              <span class="n">APPLICATION 2</span>
+              <h3>La visionneuse — l’outil du client</h3>
+              <p>
+                Elle ouvre le fichier JSON généré par l’éditeur. Le client se
+                connecte et consulte le travail de l’ingénieur expert, sans
+                avoir besoin de savoir dessiner ni de lire un plan complexe.
+              </p>
+              <ul>
+                <li>
+                  <b>Visualiser l’ouvrage</b> : plans, structure, niveaux.
+                </li>
+                <li>
+                  <b>Comprendre les désordres</b> : nature et degré de gravité
+                  de chacun.
+                </li>
+                <li>
+                  <b>Recensement intégral</b> : aucune pathologie n’est oubliée.
+                </li>
+                <li>
+                  <b>Photos d’observation</b> et rapport d’expertise associés.
+                </li>
+                <li>
+                  <b>Feuille de route</b> : mesurer l’ampleur des désordres pour
+                  planifier précisément la réhabilitation.
+                </li>
+                <li>
+                  <b>Partage avec le BET</b> chargé de l’affaire pour projeter
+                  des solutions adaptées à des désordres précis et lisibles.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="parcours">
+      <div class="wrap">
+        <h2>Du relevé à la décision</h2>
+        <p class="lead">
+          Un parcours continu entre l’expert, le maître d’ouvrage et le bureau
+          d’études.
+        </p>
+        <div class="flow">
+          <div class="card">
+            <h3>Relever</h3>
+            <p>
+              L’ingénieur expert dessine l’ouvrage et situe chaque désordre dans
+              l’éditeur.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Qualifier</h3>
+            <p>
+              Nature, gravité, photos et observations sont renseignées pour
+              chaque désordre.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Partager</h3>
+            <p>
+              Un fichier JSON est généré et remis au client avec la visionneuse.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Comprendre</h3>
+            <p>
+              Le maître d’ouvrage visualise l’ouvrage, mesure l’ampleur des
+              désordres et bâtit sa feuille de route.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Réhabiliter</h3>
+            <p>
+              Le BET s’appuie sur une cartographie précise pour définir les
+              solutions adaptées.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Ce que cela change</h2>
+        <p class="lead">
+          Pour les ingénieurs comme pour les maîtres d’ouvrage.
+        </p>
+        <div class="grid">
+          <div class="card">
+            <h3>Égalité des ingénieurs</h3>
+            <p>
+              Débutant ou dessinateur chevronné : le rendu final est le même, un
+              plan net et professionnel.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Rapports plus convaincants</h3>
+            <p>
+              Des cartographies standardisées renforcent la rigueur perçue et la
+              valeur du rapport.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Gain de productivité</h3>
+            <p>
+              L’ingénieur se concentre sur l’analyse et le diagnostic plutôt que
+              sur l’interface d’un logiciel.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Un client acteur</h3>
+            <p>
+              Informé et autonome, le maître d’ouvrage dialogue d’égal à égal
+              avec les professionnels.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="galerie">
+      <div class="wrap">
+        <h2>Galerie</h2>
+        <p class="lead">Captures d’écran et photos du projet.</p>
+        <div class="grid">
+          <div class="ph img"><img src="03.jpg" alt="Relevé sur site" /></div>
+          <div class="ph img"><img src="04.jpg" alt="Plan dessiné" /></div>
+          <div class="ph img">
+            <img src="05.jpg" alt="Cartographie des désordres" />
+          </div>
+          <div class="ph img">
+            <img src="06.jpg" alt="Vue client dans la visionneuse" />
+          </div>
+          <div class="ph img"><img src="07.jpg" alt="Export / rapport" /></div>
+          <div class="ph img"><img src="08.jpg" alt="Galerie photo 8" /></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="auteur">
+      <div class="wrap">
+        <h2>L’auteur</h2>
+        <div class="two">
+          <div class="ph img0">
+            <img src="09.jpg" alt="Portrait de Boudeffa Khaled" />
+          </div>
+          <div>
+            <p>
+              Les deux applications et le contenu de cette présentation ont été
+              conçus et réalisés par <b>Boudeffa Khaled</b>, ingénieur auprès du
+              <b>CDE-Skikda</b> (Centre de Diagnostic &amp; Expertise).
+            </p>
+            <p>
+              Développées par ses propres moyens, elles répondent à une
+              philosophie claire : démocratiser la production de plans
+              techniques et rendre l’excellence visuelle accessible à tous.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="wrap">
+        © 2026 · Conçu et créé par <b>Boudeffa Khaled</b>, ingénieur —
+        CDE-Skikda<br />Cartographie-me Pro &amp; Visionneuse Cartographie-me
+      </div>
+    </footer>
+  </body>
+</html>
